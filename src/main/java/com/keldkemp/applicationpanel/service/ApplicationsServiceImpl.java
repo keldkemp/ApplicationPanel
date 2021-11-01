@@ -93,6 +93,14 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     }
 
     @Override
+    public Applications editApplication(Applications application) {
+        applicationsRepository.save(application);
+        setAutoUpdate(application);
+
+        return application;
+    }
+
+    @Override
     public DockerDto deployApp(ApplicationDto applicationDto, DataBaseDto dataBase) {
         Applications application = getApplicationById(applicationDto.getId());
         dockerService.createDockerCompose(application);

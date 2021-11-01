@@ -32,6 +32,9 @@ public class DockerServiceImpl implements DockerService {
     @Autowired
     private SettingsService settingsService;
 
+    @Autowired
+    private ApplicationsService applicationsService;
+
     @Override
     public DockerDto createDockerCompose(Applications application) {
         String lines = dockerCompose(application);
@@ -73,6 +76,9 @@ public class DockerServiceImpl implements DockerService {
         DockerInspectDto inspectDto = inspect(application);
         if (inspectDto != null && inspectDto.getState().getStatus().equals("running")) {
             dockerDto.setStatus(true);
+
+            application.setStatusApplications(1);
+            applicationsService.editApplication(application);
         }
         return dockerDto;
     }
@@ -93,6 +99,9 @@ public class DockerServiceImpl implements DockerService {
         DockerDto dockerDto = getDockerDto(application, result);
         if (result.contains(CONTAINER_NAME + StringUtil.toLowerCase(application.getName()))) {
             dockerDto.setStatus(true);
+
+            application.setStatusApplications(1);
+            applicationsService.editApplication(application);
         }
         return dockerDto;
     }
@@ -103,6 +112,9 @@ public class DockerServiceImpl implements DockerService {
         DockerDto dockerDto = getDockerDto(application, result);
         if (result.contains(CONTAINER_NAME + StringUtil.toLowerCase(application.getName()))) {
             dockerDto.setStatus(true);
+
+            application.setStatusApplications(0);
+            applicationsService.editApplication(application);
         }
         return dockerDto;
     }
@@ -113,6 +125,9 @@ public class DockerServiceImpl implements DockerService {
         DockerDto dockerDto = getDockerDto(application, result);
         if (result.contains(CONTAINER_NAME + StringUtil.toLowerCase(application.getName()))) {
             dockerDto.setStatus(true);
+
+            application.setStatusApplications(0);
+            applicationsService.editApplication(application);
         }
         return dockerDto;
     }

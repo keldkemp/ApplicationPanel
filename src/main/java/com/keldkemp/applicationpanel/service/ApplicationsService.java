@@ -21,6 +21,8 @@ public interface ApplicationsService {
 
     ApplicationDto editApplication(ApplicationDto applicationDto);
 
+    Applications editApplication(Applications application);
+
     DockerDto deployApp(ApplicationDto applicationDto);
 
     DockerDto deployApp(ApplicationDto applicationDto, DataBaseDto dataBase);
