@@ -6,7 +6,7 @@ import {useHttp} from "../hooks/http.hook";
 export const Files = ({filesList}) => {
     const message = useMessage();
     const {loading, request, error, clearError} = useHttp();
-    const [fileList, setFileList] = useState(filesList);
+    const [fileList] = useState(filesList);
     const [fileEdit, setFileEdit] = useState(null);
     const appId = useParams().id;
 
@@ -42,8 +42,13 @@ export const Files = ({filesList}) => {
     }, [fileEdit]);
     
     const listFiles = fileList.map(file => {
-        return <div onClick={() => clickFileHandler(file)}
-                    className={file.file_name === (fileEdit && fileEdit.file_name) && "active-app"}>
+        if (file.file_name === (fileEdit && fileEdit.file_name)) {
+            return <div key={file.file_name} onClick={() => clickFileHandler(file)}
+                        className="active-app">
+                {file.file_name}
+            </div>
+        }
+        return <div key={file.file_name} onClick={() => clickFileHandler(file)}>
             {file.file_name}
         </div>
     })

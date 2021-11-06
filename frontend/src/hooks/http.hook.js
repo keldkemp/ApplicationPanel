@@ -2,7 +2,7 @@ import {useState, useCallback, useContext} from "react";
 import {AuthContext} from "../context/AuthContext";
 
 export const useHttp = () => {
-    const checkAuthUrl = '/api/applications/1'
+    const checkAuthUrl = '/api/stats/check'
     const auth = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
