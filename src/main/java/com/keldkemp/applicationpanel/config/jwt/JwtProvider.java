@@ -1,6 +1,12 @@
 package com.keldkemp.applicationpanel.config.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,8 +22,11 @@ public class JwtProvider {
     @Value("$(jwt.secret)")
     private String jwtSecret;
 
+    @Value("${jwt.expirationSec}")
+    private int jwtExpirationSec;
+
     public String generateToken(String login) {
-        Date date = Date.from(LocalDateTime.now().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(LocalDateTime.now().plusSeconds(jwtExpirationSec).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .setSubject(login)
                 .setExpiration(date)
@@ -29,8 +38,16 @@ public class JwtProvider {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
-            log.severe("invalid token");
+        } catch (SignatureException e) {
+            log.severe("Invalid JWT signature: " + e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.severe("Invalid JWT token: " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.severe("JWT token is expired: "+ e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.severe("JWT token is unsupported: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.severe("JWT claims string is empty: " + e.getMessage());
         }
         return false;
     }

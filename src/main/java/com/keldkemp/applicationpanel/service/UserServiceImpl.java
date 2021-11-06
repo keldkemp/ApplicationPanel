@@ -1,5 +1,6 @@
 package com.keldkemp.applicationpanel.service;
 
+import com.keldkemp.applicationpanel.errors.AuthExceptions;
 import com.keldkemp.applicationpanel.models.Users;
 import com.keldkemp.applicationpanel.repositories.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,6 @@ public class UserServiceImpl implements UserService {
                 return userEntity;
             }
         }
-        return null;
+        throw new AuthExceptions("Введен неверный логин или пароль!");
     }
 }
