@@ -31,9 +31,6 @@ public class ProjectsFolderServiceImpl implements ProjectsFolderService {
     @Override
     public void writeToFile(Applications application, String fileName, String message) {
         String path = StringUtil.getPath(settingsService.getProjectsFolderPath(), application.getOriginalName());
-        //TODO: Remove
-        System.out.println(path);
-        System.out.println(settingsService.getProjectsFolderPath());
 
         if (!checkIsCreateDir(path)) {
             createAppFolder(application);

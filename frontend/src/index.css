@@ -1,26 +1,18 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "~materialize-css/dist/css/materialize.min.css";
+
+
+input.yellow-input {
+    border-bottom: 1px solid #fff!important;
+    box-shadow: 0 1px 0 0 #fff!important;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+input.yellow-input + label {
+    color: #ffffff!important;
 }
 
-button {
-  border: none;
-  background: none;
-}
-
-.error-alert {
-  position: fixed !important;
-  bottom: 10px;
-  right: 10px;
+input.yellow-input:focus {
+    border-bottom: 1px solid #ffeb3b!important;
+    box-shadow: 0 1px 0 0 #fff!important;
 }
 
 .apps {
@@ -31,10 +23,6 @@ button {
   border-radius: 10px;
 }
 
-.app-info, .app-info {
-  padding: 10px;
-}
-
 .app-info {
   border-left: 2px solid grey;
 }
@@ -42,7 +30,3 @@ button {
 .active-app {
   background: tomato;
 }
-
-/*.error-alert .close {*/
-/*  display: none;*/
-/*}*/

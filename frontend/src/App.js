@@ -1,34 +1,29 @@
-import './App.css';
-import React, {Component} from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Home from "./Home";
-import ApplicationList from "./ApplicationList";
-import ApplicationDetail from "./ApplicationDetail";
-import AllApplicationList from "./AllAplicationList";
-import AppNavbar from "./AppNavbar";
-import ApplicationFiles from "./ApplicationFiles";
-import ApplicationAdditionally from "./ApplicationAdditionally";
-import AuthUser from "./AuthUser";
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import {Routes} from "./Routes";
+import {useAuth} from "./hooks/auth.hook";
+import {NavBar} from "./components/NavBar";
+import {AuthContext} from "./context/AuthContext";
+import {Loader} from "./components/Loader";
+import 'materialize-css';
 
-class App extends Component {
+function App() {
+    const {token, login, logout, refreshToken, ready} = useAuth();
+    const isAuth = !!token;
+    const routes = Routes(isAuth);
 
-  render() {
+    if (!ready) {
+        return <Loader/>
+    }
+
     return (
-        <Router>
-            <AppNavbar/>
-            <p/>
-          <Switch>
-              <Route path='/' exact={true} component={AuthUser}/>
-              <Route path='/applications' exact={true} component={ApplicationList}/>
-              <Route path='/applications/:id/additionally' component={ApplicationAdditionally}/>
-              <Route path='/applications/:id/files' component={ApplicationFiles}/>
-              <Route path='/applications/:id' component={ApplicationDetail}/>
-              <Route path='/all' exact={true} component={AllApplicationList}/>
-              <Route path='/auth/login' exact={true} component={AuthUser}/>
-          </Switch>
-        </Router>
+        <AuthContext.Provider value={{token, refreshToken, login, logout, isAuth}}>
+            <Router>
+                { isAuth && <NavBar/> }
+                {routes}
+            </Router>
+        </AuthContext.Provider>
     )
-  }
 }
 
 export default App;

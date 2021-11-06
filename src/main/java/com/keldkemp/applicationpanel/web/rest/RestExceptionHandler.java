@@ -1,7 +1,9 @@
 package com.keldkemp.applicationpanel.web.rest;
 
 import com.keldkemp.applicationpanel.errors.ApiError;
+import com.keldkemp.applicationpanel.errors.AuthExceptions;
 import com.keldkemp.applicationpanel.errors.GitHubActionsException;
+import com.keldkemp.applicationpanel.errors.TokenRefreshException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -149,6 +151,27 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(GitHubActionsException.class)
     protected ResponseEntity<Object> handleGitHubException(GitHubActionsException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(AuthExceptions.class)
+    protected ResponseEntity<Object> handleAuthException(AuthExceptions ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    protected ResponseEntity<Object> handleTokenRefreshException(TokenRefreshException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }

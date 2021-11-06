@@ -11,9 +11,11 @@ import com.keldkemp.applicationpanel.web.rest.dto.DataBaseDto;
 import com.keldkemp.applicationpanel.web.rest.dto.DockerDto;
 import com.keldkemp.applicationpanel.web.rest.dto.FileDto;
 import com.keldkemp.applicationpanel.web.rest.mappers.ApplicationsMapper;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -77,7 +79,11 @@ public class ApplicationsServiceImpl implements ApplicationsService {
         validateApplication(applicationDto);
 
         Applications applications = applicationsMapper.toApplications(applicationDto);
-        applicationsRepository.save(applications);
+        try {
+            applicationsRepository.save(applications);
+        } catch (DataIntegrityViolationException exception) {
+            throw new RuntimeException("Такое приложение уже добавлено!");
+        }
 
         return applicationsMapper.applicationDto(applications);
     }
@@ -130,7 +136,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
             dockerService.createDockerCompose(application);
         }
 
-        dockerService.pull(application);
+        DockerDto dockerDto = dockerService.pull(application);
 
         if (applicationDto.getOptions().getIsStartApp()) {
             DockerDto dockerCompose = dockerService.startDockerCompose(application);
@@ -146,7 +152,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
             return dockerCompose;
         } else {
-            return null;
+            return dockerDto;
         }
     }
 
@@ -220,8 +226,8 @@ public class ApplicationsServiceImpl implements ApplicationsService {
         GitHubWorkflowsRepo gitHubWorkflowsRepo = gitHubService.getAllWorkflows(applicationDto.getGitHubUserRepo());
 
         if (gitHubWorkflowsRepo.getTotalCount() < 1) {
-            throw  new GitHubActionsException("Docker actions", "url", applicationDto.getGitHubUrl(),
-                    "name", applicationDto.getOriginalName());
+            throw  new GitHubActionsException("Docker actions", "url", applicationDto.getGitHubUserRepo().getHtmlUrl(),
+                    "name", applicationDto.getGitHubUserRepo().getFullName());
         }
 
         List<GitHubWorkflow> list = gitHubWorkflowsRepo.getWorkflows().stream()
@@ -231,8 +237,8 @@ public class ApplicationsServiceImpl implements ApplicationsService {
                 .collect(Collectors.toList());
 
         if (list.size() < 1) {
-            throw  new GitHubActionsException("Docker actions", "url", applicationDto.getGitHubUrl(),
-                    "name", applicationDto.getOriginalName());
+            throw  new GitHubActionsException("Docker actions", "url", applicationDto.getGitHubUserRepo().getHtmlUrl(),
+                    "name", applicationDto.getGitHubUserRepo().getFullName());
         }
     }
 }
