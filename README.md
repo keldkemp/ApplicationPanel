@@ -11,6 +11,8 @@ spring.datasource.password=PasswordDb
 spring.jpa.hibernate.ddl-auto=update
 projectsFolderPath=Folder application projects
 jwt.secret=JWT Secret
+jwt.expirationSec=1800
+jwt.refreshTokenDurationSec=86400
 ~~~
 
 О работе приложения:<br>

@@ -24,7 +24,7 @@ export const useHttp = () => {
 
         const data = await resp.json();
         
-        auth.login(data.accessToken, data.refreshToken);
+        auth.login(data.accessToken, data.refreshToken, data.userId);
 
         return data.accessToken;
     }, [auth]);
