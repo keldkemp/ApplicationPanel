@@ -1,7 +1,7 @@
 package com.keldkemp.applicationpanel.web.rest;
 
 import com.keldkemp.applicationpanel.service.UserService;
-import com.keldkemp.applicationpanel.web.rest.dto.AuthRequestDto;
+import com.keldkemp.applicationpanel.web.rest.dto.UserChangePasswordDto;
 import com.keldkemp.applicationpanel.web.rest.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +25,8 @@ public class UsersController {
     }
 
     @PostMapping("/{id}/change-password")
-    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody AuthRequestDto authRequestDto) {
-        userService.changePassword(id, authRequestDto.getPassword());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody UserChangePasswordDto userChangePasswordDto) {
+        userService.changePassword(id, userChangePasswordDto);
+        return ResponseEntity.ok("{}");
     }
 }

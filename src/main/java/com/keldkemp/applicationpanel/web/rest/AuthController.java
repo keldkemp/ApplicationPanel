@@ -31,7 +31,7 @@ public class AuthController {
         String token = jwtProvider.generateToken(userEntity.getLogin());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userEntity.getId());
 
-        return new AuthResponseDto(token, refreshToken.getToken());
+        return new AuthResponseDto(token, refreshToken.getToken(), userEntity.getId());
     }
 
     @PostMapping("/refreshtoken")
@@ -43,7 +43,7 @@ public class AuthController {
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     String token = jwtProvider.generateToken(user.getLogin());
-                    return ResponseEntity.ok(new TokenRefreshResponseDto(token, requestRefreshToken));
+                    return ResponseEntity.ok(new TokenRefreshResponseDto(token, requestRefreshToken, user.getId()));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));

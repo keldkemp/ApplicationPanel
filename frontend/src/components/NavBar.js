@@ -19,6 +19,7 @@ export const NavBar = () => {
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
                     <li><NavLink to="/applications" className="nav-link px-2 text-white">Мои приложени</NavLink></li>
                     <li><NavLink to="/all" className="nav-link px-2 text-white">Все приложения</NavLink></li>
+                    <li><NavLink to="/profile" className="nav-link px-2 text-white">Профиль</NavLink></li>
                     <li><a href="/" onClick={logoutHandler} className="nav-link px-2 text-white">Выйти</a></li>
                 </ul>
             </div>

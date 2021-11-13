@@ -3,6 +3,7 @@ package com.keldkemp.applicationpanel.service;
 import com.keldkemp.applicationpanel.errors.AuthExceptions;
 import com.keldkemp.applicationpanel.models.Users;
 import com.keldkemp.applicationpanel.repositories.UserEntityRepository;
+import com.keldkemp.applicationpanel.web.rest.dto.UserChangePasswordDto;
 import com.keldkemp.applicationpanel.web.rest.dto.UserDto;
 import com.keldkemp.applicationpanel.web.rest.mappers.UsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long id) {
-        return usersMapper.userDto(userEntityRepository.getById(id));
+        return usersMapper.userDto(userEntityRepository.findById(id).get());
     }
 
     @Override
@@ -57,10 +58,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(Long id, String password) {
-        Users user = userEntityRepository.getById(id);
-        user.setPassword(passwordEncoder.encode(password));
-
-        userEntityRepository.save(user);
+    public void changePassword(Long id, UserChangePasswordDto userChangePasswordDto) {
+        Users user = userEntityRepository.findById(id).get();
+        if (passwordEncoder.matches(userChangePasswordDto.getOldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(userChangePasswordDto.getNewPassword()));
+            userEntityRepository.save(user);
+        } else {
+            throw new RuntimeException("Введен неверно старый пароль!");
+        }
     }
 }
