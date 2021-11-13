@@ -25,17 +25,6 @@ public class AuthController {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
-    /*
-    @PostMapping("/register")
-    public String registerUser(@RequestBody AuthRequestDto registrationRequest) {
-        Users user = new Users();
-        user.setPassword(registrationRequest.getPassword());
-        user.setLogin(registrationRequest.getLogin());
-        userService.saveUser(user);
-        return "OK";
-    }
-     */
-
     @PostMapping("/login")
     public AuthResponseDto auth(@RequestBody AuthRequestDto request) {
         Users userEntity = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
