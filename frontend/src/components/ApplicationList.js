@@ -7,7 +7,7 @@ import {useHttp} from "../hooks/http.hook";
 export const ApplicationList = ({applicationList, isGitHub}) => {
     const message = useMessage();
     const {loading, request, error, clearError} = useHttp();
-    const [newState, setNewState] = useState(null);
+    const [, setNewState] = useState(null);
     let listApp;
 
     useEffect(() => {
